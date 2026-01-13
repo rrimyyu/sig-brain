@@ -1,12 +1,372 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ko">
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Portfolio</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SIG Brain | 성과보고</title>
+  <meta name="description" content="SIG Brain 성과보고: AR 기반 Neglect 평가·재활 게임 및 정량 결과" />
+
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --card:#111826;
+      --muted:#9fb0c4;
+      --text:#e8eef6;
+      --accent:#4aa3ff;
+      --accent2:#7cdd9a;
+      --border:rgba(255,255,255,.10);
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+      --max:1080px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", Arial, sans-serif;
+      background: radial-gradient(1200px 700px at 20% 0%, rgba(74,163,255,.12), transparent 55%),
+                  radial-gradient(900px 600px at 90% 30%, rgba(124,221,154,.10), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.6;
+    }
+    a{color:inherit}
+    .wrap{max-width:var(--max); margin:0 auto; padding:28px 18px 60px}
+    header{
+      display:flex; gap:14px; align-items:flex-start; justify-content:space-between;
+      padding:22px; border:1px solid var(--border); border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+      box-shadow:var(--shadow);
+    }
+    .brand{
+      display:flex; flex-direction:column; gap:6px;
+    }
+    .brand h1{margin:0; font-size:22px; letter-spacing:.2px}
+    .brand p{margin:0; color:var(--muted); font-size:14px}
+    .badge-row{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+    .badge{
+      padding:7px 10px; font-size:12px; border-radius:999px;
+      border:1px solid var(--border); background:rgba(255,255,255,.03);
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .badge strong{color:var(--text); font-weight:600}
+    .section{
+      margin-top:22px;
+      padding:18px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background:rgba(255,255,255,.02);
+      box-shadow:var(--shadow);
+    }
+    .section h2{
+      margin:0 0 10px 0;
+      font-size:18px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .kicker{color:var(--muted); font-size:13px; margin:0 0 14px 0}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(12, 1fr);
+      gap:14px;
+    }
+    .card{
+      grid-column:span 6;
+      padding:14px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:linear-gradient(180deg, rgba(17,24,38,.9), rgba(17,24,38,.6));
+    }
+    .card h3{margin:0 0 6px 0; font-size:15px}
+    .card p{margin:0; color:var(--muted); font-size:13px}
+    .thumb{
+      margin-top:12px;
+      border-radius:12px;
+      border:1px dashed rgba(255,255,255,.25);
+      background:rgba(255,255,255,.02);
+      overflow:hidden;
+    }
+    .thumb img{
+      width:100%; height:240px; object-fit:cover; display:block;
+      background:rgba(255,255,255,.03);
+    }
+    .thumb .cap{
+      padding:10px 10px 12px;
+      font-size:12px;
+      color:var(--muted);
+      border-top:1px solid var(--border);
+    }
+    .pill{
+      display:inline-flex; gap:8px; align-items:center;
+      font-size:12px; color:var(--muted);
+      border:1px solid var(--border); border-radius:999px;
+      padding:6px 10px; margin-top:10px;
+      background:rgba(255,255,255,.02);
+      width:max-content;
+    }
+    .dot{width:8px; height:8px; border-radius:50%; background:var(--accent)}
+    .dot.green{background:var(--accent2)}
+    .results{
+      display:grid;
+      grid-template-columns:repeat(12, 1fr);
+      gap:14px;
+    }
+    .panel{
+      grid-column:span 6;
+      padding:14px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:rgba(255,255,255,.02);
+    }
+    .panel h3{margin:0 0 8px 0; font-size:15px}
+    .metric{
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap:12px;
+      padding:10px 0;
+      border-top:1px solid var(--border);
+    }
+    .metric:first-of-type{border-top:none}
+    .metric .name{font-size:13px}
+    .metric .desc{font-size:12px; color:var(--muted); margin-top:2px}
+    .metric .value{
+      font-variant-numeric: tabular-nums;
+      font-weight:700;
+      font-size:15px;
+      padding:6px 10px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.03);
+      white-space:nowrap;
+    }
+    .classify{
+      grid-column:span 12;
+      padding:14px;
+      border-radius:14px;
+      border:1px solid rgba(74,163,255,.35);
+      background:linear-gradient(180deg, rgba(74,163,255,.12), rgba(255,255,255,.02));
+    }
+    .classify h3{margin:0 0 6px 0; font-size:15px}
+    .classify p{margin:0; color:var(--muted); font-size:13px}
+    .classify .label{
+      margin-top:10px;
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    }
+    .tag{
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.03);
+      color:var(--muted);
+    }
+    .tag strong{color:var(--text)}
+    footer{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+      opacity:.9;
+    }
+    @media (max-width: 900px){
+      header{flex-direction:column; gap:12px}
+      .badge-row{justify-content:flex-start}
+      .card{grid-column:span 12}
+      .panel{grid-column:span 12}
+      .thumb img{height:220px}
+    }
+  </style>
 </head>
+
 <body>
-  <p>Hello, World!</p>
+  <div class="wrap">
+
+    <!-- Header -->
+    <header>
+      <div class="brand">
+        <h1>SIG Brain | 성과보고</h1>
+        <p>증강현실(AR) 기반 공간무시(Neglect) 평가·재활 게임 개발 및 정량 결과 요약</p>
+      </div>
+      <div class="badge-row">
+        <div class="badge"><strong>Company</strong>: SIG Brain</div>
+        <div class="badge"><strong>Focus</strong>: AR + 6DoF</div>
+        <div class="badge"><strong>Outputs</strong>: Heatmaps + Metrics + Classification</div>
+      </div>
+    </header>
+
+    <!-- Assessment -->
+    <section class="section" id="assessment">
+      <h2>공간무시 평가용 게임 (Assessment Games)</h2>
+      <p class="kicker">2개 평가 과제에서 행동 데이터를 수집하고, 히트맵 및 정량 지표로 공간 편향을 정량화합니다.</p>
+
+      <div class="grid">
+        <!-- Assessment 1 -->
+        <div class="card">
+          <h3>① 시각 탐색 기반 타겟 확인 게임</h3>
+          <p>
+            화면에 타겟이 제시되며, 사용자는 <b>고개 움직임</b>을 통해 타겟을 탐색·확인합니다.
+            타겟 위치별 반응 여부 및 반응 시간을 통해 좌·우 공간 탐색 특성을 평가합니다.
+          </p>
+          <div class="pill"><span class="dot"></span><span>핵심: 좌·우 탐색/반응 차이</span></div>
+
+          <div class="thumb">
+            <!-- TODO: 이미지 파일 경로를 교체하세요 -->
+            <img src="images/assessment_target_game.png" alt="시각 탐색 기반 타겟 확인 게임 (이미지 자리)" />
+            <div class="cap">[이미지] 평가 게임 ① 화면/플로우 (예: 타겟 제시, 탐색, 반응)</div>
+          </div>
+        </div>
+
+        <!-- Assessment 2 -->
+        <div class="card">
+          <h3>② 라인 바이섹션 기반 중앙 정렬 게임</h3>
+          <p>
+            전통적 line bisection 원리를 기반으로, 사용자는 <b>고개 움직임</b>으로 핸들을 이동시켜
+            본인이 생각하는 선의 “정중앙” 위치에 정렬합니다. 최종 핸들 위치를 통해 공간 편위를 정량화합니다.
+          </p>
+          <div class="pill"><span class="dot"></span><span>핵심: 중앙 정렬 편위(우측 편향 등)</span></div>
+
+          <div class="thumb">
+            <!-- TODO: 이미지 파일 경로를 교체하세요 -->
+            <img src="images/assessment_line_bisection.png" alt="라인 바이섹션 기반 중앙 정렬 게임 (이미지 자리)" />
+            <div class="cap">[이미지] 평가 게임 ② 화면/플로우 (예: 선 제시, 핸들 이동, 정렬 완료)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rehabilitation -->
+    <section class="section" id="rehab">
+      <h2>공간무시 재활용 게임 (Rehabilitation Games)</h2>
+      <p class="kicker">2개 재활 과제는 힌트/추적 기반으로 좌측 공간 탐색 및 시각–운동 협응을 훈련하도록 설계되었습니다.</p>
+
+      <div class="grid">
+        <!-- Rehab 1 -->
+        <div class="card">
+          <h3>① 힌트 기반 타겟 유도 게임</h3>
+          <p>
+            타겟과 함께 단계적 힌트를 제공하여, 사용자의 고개 움직임이 <b>점진적으로 타겟 방향</b>으로 유도되도록 설계된 재활 과제입니다.
+          </p>
+          <div class="pill"><span class="dot green"></span><span>목표: 좌측 주의 유도/확장</span></div>
+
+          <div class="thumb">
+            <!-- TODO: 이미지 파일 경로를 교체하세요 -->
+            <img src="images/rehab_hint_target.png" alt="힌트 기반 타겟 유도 게임 (이미지 자리)" />
+            <div class="cap">[이미지] 재활 게임 ① 화면/플로우 (예: 힌트, 유도, 성공 피드백)</div>
+          </div>
+        </div>
+
+        <!-- Rehab 2 -->
+        <div class="card">
+          <h3>② 연속 추적 기반 라인 따라가기 게임</h3>
+          <p>
+            화면에 제시된 라인을 따라 사용자가 고개 움직임으로 <b>연속적인 추적 동작</b>을 수행합니다.
+            시각–운동 협응 및 공간 인식 능력 향상을 목표로 합니다.
+          </p>
+          <div class="pill"><span class="dot green"></span><span>목표: 추적 정확도/연속성 향상</span></div>
+
+          <div class="thumb">
+            <!-- TODO: 이미지 파일 경로를 교체하세요 -->
+            <img src="images/rehab_line_follow.png" alt="연속 추적 기반 라인 따라가기 게임 (이미지 자리)" />
+            <div class="cap">[이미지] 재활 게임 ② 화면/플로우 (예: 라인 제시, 추적, 완료)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Outcomes -->
+    <section class="section" id="outcomes">
+      <h2>정량적 결과 및 분류 (Outcomes & Classification)</h2>
+      <p class="kicker">
+        평가용 게임 2종에서 각각 1개의 공간 분포 히트맵을 생성하고, 2개의 정량 지표를 산출합니다.
+        지표가 사전에 정의된 기준을 초과하는 경우 “Neglect로 분류” 문구를 함께 제시합니다.
+      </p>
+
+      <div class="results">
+        <!-- Heatmaps -->
+        <div class="panel">
+          <h3>공간 분포 히트맵 (2종)</h3>
+
+          <div class="thumb">
+            <!-- TODO: 히트맵 이미지로 교체 -->
+            <img src="images/heatmap_target_game.png" alt="타겟 확인 게임 히트맵 (이미지 자리)" />
+            <div class="cap">[히트맵] 시각 탐색 기반 타겟 확인 게임</div>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <div class="thumb">
+            <!-- TODO: 히트맵 이미지로 교체 -->
+            <img src="images/heatmap_line_bisection.png" alt="라인 바이섹션 게임 히트맵 (이미지 자리)" />
+            <div class="cap">[히트맵] 라인 바이섹션 기반 중앙 정렬 게임</div>
+          </div>
+        </div>
+
+        <!-- Metrics -->
+        <div class="panel">
+          <h3>정량 지표 (2종)</h3>
+
+          <div class="metric">
+            <div>
+              <div class="name"><b>좌/우 타겟 반응시간 비율</b> (Right vs Left RT Ratio)</div>
+              <div class="desc">오른쪽 대비 왼쪽 타겟 반응시간의 비율(또는 차이)을 요약</div>
+            </div>
+            <!-- TODO: 실제 값으로 교체 -->
+            <div class="value">RT Ratio: 1.25</div>
+          </div>
+
+          <div class="metric">
+            <div>
+              <div class="name"><b>Line bisection 기반 편위 지표</b> (예: EWB)</div>
+              <div class="desc">정중앙 대비 최종 핸들 위치의 부호/절대 편위로 공간 편향을 정량화</div>
+            </div>
+            <!-- TODO: 실제 값으로 교체 -->
+            <div class="value">EWB: +0.18</div>
+          </div>
+
+          <div class="metric">
+            <div>
+              <div class="name"><b>추가(선택)</b>: 성공률 / 실패율</div>
+              <div class="desc">시간 제한 내 과제 완료 여부(success=1/0)로 안정성 평가</div>
+            </div>
+            <!-- TODO: 필요 시 사용 -->
+            <div class="value">Success: 92%</div>
+          </div>
+
+          <div class="metric">
+            <div>
+              <div class="name"><b>추가(선택)</b>: 평균 편위 각도</div>
+              <div class="desc">과제 수행 중 yaw 평균(또는 목표 대비 yaw 편위 평균)</div>
+            </div>
+            <!-- TODO: 필요 시 사용 -->
+            <div class="value">Yaw: +6.2°</div>
+          </div>
+        </div>
+
+        <!-- Classification -->
+        <div class="classify">
+          <h3>분류 결과 (Classification)</h3>
+          <p>
+            위 정량 지표가 사전에 정의된 기준값(컷오프)을 초과할 경우, 아래와 같은 임상적 분류 문구를 제시합니다.
+            <br />
+            <!-- TODO: 실제 분류 결과로 교체 -->
+            <b style="color:var(--text)">“본 환자는 공간무시(Neglect)로 분류되었다.”</b>
+          </p>
+
+          <div class="label">
+            <span class="tag"><strong>Rule</strong>: Cutoff 기반 분류</span>
+            <span class="tag"><strong>Inputs</strong>: RT Ratio, EWB</span>
+            <span class="tag"><strong>Outputs</strong>: Heatmaps + Metrics + Label</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      © <span id="year"></span> SIG Brain. All rights reserved.
+    </footer>
+  </div>
+
+  <script>
+    // 자동 연도
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
