@@ -37,9 +37,7 @@
       background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
       box-shadow:var(--shadow);
     }
-    .brand{
-      display:flex; flex-direction:column; gap:6px;
-    }
+    .brand{display:flex; flex-direction:column; gap:6px;}
     .brand h1{margin:0; font-size:22px; letter-spacing:.2px}
     .brand p{margin:0; color:var(--muted); font-size:14px}
     .badge-row{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
@@ -50,6 +48,7 @@
       white-space:nowrap;
     }
     .badge strong{color:var(--text); font-weight:600}
+
     .section{
       margin-top:22px;
       padding:18px;
@@ -64,6 +63,7 @@
       display:flex; align-items:center; gap:10px;
     }
     .kicker{color:var(--muted); font-size:13px; margin:0 0 14px 0}
+
     .grid{
       display:grid;
       grid-template-columns:repeat(12, 1fr);
@@ -78,6 +78,7 @@
     }
     .card h3{margin:0 0 6px 0; font-size:15px}
     .card p{margin:0; color:var(--muted); font-size:13px}
+
     .thumb{
       margin-top:12px;
       border-radius:12px;
@@ -86,7 +87,18 @@
       overflow:hidden;
     }
     .thumb img{
-      width:100%; height:240px; object-fit:cover; display:block;
+      width:100%;
+      height:240px;
+      object-fit:cover;
+      display:block;
+      background:rgba(255,255,255,.03);
+    }
+    /* ✅ video 스타일 추가 */
+    .thumb video{
+      width:100%;
+      height:240px;
+      object-fit:cover;
+      display:block;
       background:rgba(255,255,255,.03);
     }
     .thumb .cap{
@@ -95,6 +107,7 @@
       color:var(--muted);
       border-top:1px solid var(--border);
     }
+
     .pill{
       display:inline-flex; gap:8px; align-items:center;
       font-size:12px; color:var(--muted);
@@ -105,6 +118,7 @@
     }
     .dot{width:8px; height:8px; border-radius:50%; background:var(--accent)}
     .dot.green{background:var(--accent2)}
+
     .results{
       display:grid;
       grid-template-columns:repeat(12, 1fr);
@@ -118,6 +132,7 @@
       background:rgba(255,255,255,.02);
     }
     .panel h3{margin:0 0 8px 0; font-size:15px}
+
     .metric{
       display:flex; align-items:flex-start; justify-content:space-between;
       gap:12px;
@@ -137,6 +152,7 @@
       background:rgba(255,255,255,.03);
       white-space:nowrap;
     }
+
     .classify{
       grid-column:span 12;
       padding:14px;
@@ -159,6 +175,7 @@
       color:var(--muted);
     }
     .tag strong{color:var(--text)}
+
     footer{
       margin-top:18px;
       color:var(--muted);
@@ -166,12 +183,14 @@
       text-align:center;
       opacity:.9;
     }
+
     @media (max-width: 900px){
       header{flex-direction:column; gap:12px}
       .badge-row{justify-content:flex-start}
       .card{grid-column:span 12}
       .panel{grid-column:span 12}
       .thumb img{height:220px}
+      .thumb video{height:220px}
     }
   </style>
 </head>
@@ -207,15 +226,11 @@
           </p>
           <div class="pill"><span class="dot"></span><span>핵심: 좌·우 탐색/반응 차이</span></div>
 
-          <!-- <div class="thumb">
-            <!-- TODO: 이미지 파일 경로를 교체하세요 -->
-            <img src="images/assessment_target_game.png" alt="시각 탐색 기반 타겟 확인 게임 (이미지 자리)" />
-            <div class="cap">[이미지] 평가 게임 ① 화면/플로우 (예: 타겟 제시, 탐색, 반응)</div>
-          </div> -->
           <div class="thumb">
             <video autoplay muted loop playsinline width="100%"
-                   poster="videos/assessment_1.png">
+                   poster="images/assessment_1.png">
               <source src="videos/assessment_1.mp4" type="video/mp4">
+              브라우저가 동영상을 지원하지 않습니다.
             </video>
             <div class="cap">[비디오] 평가 게임 ① 화면/플로우 (예: 타겟 제시, 탐색, 반응)</div>
           </div>
@@ -229,14 +244,15 @@
             본인이 생각하는 선의 “정중앙” 위치에 정렬합니다. 최종 핸들 위치를 통해 공간 편위를 정량화합니다.
           </p>
           <div class="pill"><span class="dot"></span><span>핵심: 중앙 정렬 편위(우측 편향 등)</span></div>
+
           <div class="thumb">
             <video autoplay muted loop playsinline width="100%"
-                   poster="videos/assessment_1.png">
-              <source src="videos/assessment_1.mp4" type="video/mp4">
+                   poster="images/assessment_2.png">
+              <source src="videos/assessment_2.mp4" type="video/mp4">
+              브라우저가 동영상을 지원하지 않습니다.
             </video>
             <div class="cap">[비디오] 평가 게임 ② 화면/플로우 (예: 선 제시, 핸들 이동, 정렬 완료)</div>
           </div>
-        </div>
         </div>
       </div>
     </section>
@@ -257,8 +273,9 @@
 
           <div class="thumb">
             <video autoplay muted loop playsinline width="100%"
-                   poster="videos/Rehab_1.png">
-              <source src="videos/Rehab_1.mp4" type="video/mp4">
+                   poster="images/rehab_1.png">
+              <source src="videos/rehab_1.mp4" type="video/mp4">
+              브라우저가 동영상을 지원하지 않습니다.
             </video>
             <div class="cap">[비디오] 재활 게임 ① 화면/플로우 (예: 힌트, 유도, 성공 피드백)</div>
           </div>
@@ -275,8 +292,9 @@
 
           <div class="thumb">
             <video autoplay muted loop playsinline width="100%"
-                   poster="videos/Rehab_2.png">
-              <source src="videos/Rehab_2.mp4" type="video/mp4">
+                   poster="images/rehab_2.png">
+              <source src="videos/rehab_2.mp4" type="video/mp4">
+              브라우저가 동영상을 지원하지 않습니다.
             </video>
             <div class="cap">[비디오] 재활 게임 ② 화면/플로우 (예: 라인 제시, 추적, 완료)</div>
           </div>
@@ -298,14 +316,14 @@
           <h3>공간 분포 히트맵 (2종)</h3>
 
           <div class="thumb">
-            <img src="videos/Heatmap_1.png" alt="타겟 확인 게임 히트맵 (이미지 자리)" />
+            <img src="images/heatmap_1.png" alt="타겟 확인 게임 히트맵" />
             <div class="cap">[히트맵] 시각 탐색 기반 타겟 확인 게임</div>
           </div>
 
           <div style="height:12px"></div>
 
           <div class="thumb">
-            <img src="videos/Heatmap_2.png" alt="라인 바이섹션 게임 히트맵 (이미지 자리)" />
+            <img src="images/heatmap_2.png" alt="라인 바이섹션 게임 히트맵" />
             <div class="cap">[히트맵] 라인 바이섹션 기반 중앙 정렬 게임</div>
           </div>
         </div>
@@ -319,7 +337,6 @@
               <div class="name"><b>좌/우 타겟 반응시간 비율</b> (Right vs Left RT Ratio)</div>
               <div class="desc">오른쪽 대비 왼쪽 타겟 반응시간의 비율(또는 차이)을 요약</div>
             </div>
-            <!-- TODO: 실제 값으로 교체 -->
             <div class="value">RT Ratio: 1.25</div>
           </div>
 
@@ -328,7 +345,6 @@
               <div class="name"><b>Line bisection 기반 편위 지표</b> (예: EWB)</div>
               <div class="desc">정중앙 대비 최종 핸들 위치의 부호/절대 편위로 공간 편향을 정량화</div>
             </div>
-            <!-- TODO: 실제 값으로 교체 -->
             <div class="value">EWB: +0.18</div>
           </div>
 
@@ -337,7 +353,6 @@
               <div class="name"><b>추가(선택)</b>: 성공률 / 실패율</div>
               <div class="desc">시간 제한 내 과제 완료 여부(success=1/0)로 안정성 평가</div>
             </div>
-            <!-- TODO: 필요 시 사용 -->
             <div class="value">Success: 92%</div>
           </div>
 
@@ -346,7 +361,6 @@
               <div class="name"><b>추가(선택)</b>: 평균 편위 각도</div>
               <div class="desc">과제 수행 중 yaw 평균(또는 목표 대비 yaw 편위 평균)</div>
             </div>
-            <!-- TODO: 필요 시 사용 -->
             <div class="value">Yaw: +6.2°</div>
           </div>
         </div>
@@ -357,7 +371,6 @@
           <p>
             위 정량 지표가 사전에 정의된 기준값(컷오프)을 초과할 경우, 아래와 같은 임상적 분류 문구를 제시합니다.
             <br />
-            <!-- TODO: 실제 분류 결과로 교체 -->
             <b style="color:var(--text)">“본 환자는 공간무시(Neglect)로 분류되었다.”</b>
           </p>
 
@@ -376,7 +389,6 @@
   </div>
 
   <script>
-    // 자동 연도
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
