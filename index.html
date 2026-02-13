@@ -197,6 +197,7 @@
       background:rgba(255,255,255,.92);
     }
     .panel h3{margin:0 0 8px 0; font-size:14px}
+
     .metric{
       display:flex; align-items:flex-start; justify-content:space-between;
       gap:12px;
@@ -217,6 +218,95 @@
       white-space:nowrap;
       color:var(--ink);
     }
+
+    /* === Added: Score highlight block === */
+    .scorebox{
+      margin-top:14px;
+      border-radius:14px;
+      border:1px solid rgba(43,123,228,.28);
+      background:linear-gradient(180deg, rgba(63,182,255,.12), rgba(255,255,255,.96));
+      padding:12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .scorebox .left{
+      min-width:200px;
+    }
+    .scorebox .title{
+      font-size:12px;
+      color:var(--muted);
+      margin:0 0 4px 0;
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+    .scorebox .big{
+      display:flex;
+      gap:10px;
+      align-items:baseline;
+      margin:0;
+    }
+    .scorebox .score{
+      font-size:28px;
+      font-weight:900;
+      letter-spacing:-.2px;
+      font-variant-numeric: tabular-nums;
+      line-height:1;
+    }
+    .scorebox .unit{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:700;
+    }
+    .scorebox .hint{
+      font-size:12px;
+      color:var(--subtle);
+      margin-top:6px;
+    }
+    .barwrap{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-width:220px;
+    }
+    .bar{
+      height:12px;
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid rgba(15,23,42,.10);
+      background:rgba(15,23,42,.06);
+      position:relative;
+    }
+    .fill{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(14,165,233,.95), rgba(245,158,11,.95), rgba(239,68,68,.95));
+      transition:width .35s ease;
+    }
+    .ranges{
+      display:flex;
+      justify-content:space-between;
+      font-size:11px;
+      color:var(--subtle);
+      padding:0 2px;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(15,23,42,.10);
+      background:rgba(255,255,255,.92);
+      color:var(--muted);
+      font-size:12px;
+      white-space:nowrap;
+      box-shadow:0 6px 16px rgba(2, 38, 77, .06);
+    }
+    .chip .dot{width:8px;height:8px;border-radius:50%}
 
     /* Clinical impression */
     .impression{
@@ -268,6 +358,9 @@
       .card{grid-column:span 12}
       .panel{grid-column:span 12}
       .thumb img, .thumb video{height:220px}
+
+      .scorebox{flex-direction:column; align-items:stretch}
+      .barwrap{min-width:unset}
     }
 
     @media print{
@@ -420,15 +513,15 @@
         </div>
 
         <!-- Metrics -->
-        <div class="panel">
-          <h3>정량 지표</h3>
+        <div class="panel" id="metrics-panel">
+          <h3>주요 정량 지표</h3>
 
           <div class="metric">
             <div>
               <div class="name"><b>RT Ratio</b> (Right vs Left Reaction Time)</div>
               <div class="desc">좌/우 타겟 반응시간 불균형을 요약(값↑ = 좌측 반응 지연 가능성)</div>
             </div>
-            <div class="value">1.25</div>
+            <div class="value" id="rtRatio">1.25</div>
           </div>
 
           <div class="metric">
@@ -436,7 +529,7 @@
               <div class="name"><b>EWB</b> (Line Bisection Deviation)</div>
               <div class="desc">정중앙 대비 정렬 편위(부호는 편향 방향을 의미)</div>
             </div>
-            <div class="value">+0.18</div>
+            <div class="value" id="ewb">+0.18</div>
           </div>
 
           <div class="metric">
@@ -444,7 +537,7 @@
               <div class="name"><b>Success Rate</b></div>
               <div class="desc">시간 제한 내 과제 완료 비율(수행 안정성 참고)</div>
             </div>
-            <div class="value">92%</div>
+            <div class="value" id="successRate">92%</div>
           </div>
 
           <div class="metric">
@@ -452,8 +545,38 @@
               <div class="name"><b>Mean Yaw</b></div>
               <div class="desc">탐색 편향을 간접 반영하는 머리 회전(평균)</div>
             </div>
-            <div class="value">+6.2°</div>
+            <div class="value" id="meanYaw">+6.2°</div>
           </div>
+
+          <!-- === Added: Neglect prediction score 강조 영역 === -->
+          <div class="scorebox" aria-label="Neglect prediction score">
+            <div class="left">
+              <div class="title">이 환자의 공간무시(neglect) 예측 점수</div>
+              <p class="big">
+                <span class="score" id="neglectScore">60</span>
+                <span class="unit">점 / 100</span>
+              </p>
+              <div class="hint" id="riskHint">중간~고위험 경계(추가 확인 권고)</div>
+            </div>
+
+            <div class="barwrap">
+              <div class="bar" role="img" aria-label="0에서 100까지의 위험도 바">
+                <div class="fill" id="scoreFill" style="width:60%"></div>
+              </div>
+              <div class="ranges">
+                <span>0 (낮음)</span>
+                <span>30</span>
+                <span>60</span>
+                <span>100 (높음)</span>
+              </div>
+              <div class="chip" id="riskChip">
+                <span class="dot warn" id="chipDot"></span>
+                <span><b id="riskLevel">경계</b> · Risk Score 기반</span>
+              </div>
+            </div>
+          </div>
+          <!-- === /Added === -->
+
         </div>
 
         <!-- Clinical impression -->
@@ -524,6 +647,63 @@
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
+
+    /**
+     * 간단한 "데모용" 점수 매핑 로직:
+     * - 실제 연구/제품에서는 학습된 로지스틱 회귀(또는 다른 모델)의 계수/스케일러를 사용해야 합니다.
+     * - 여기서는 UI에 '60점'처럼 강조 표시하는 형태를 보여주기 위한 예시입니다.
+     */
+
+    // --- 입력값 파싱 ---
+    const rtRatio = parseFloat(document.getElementById("rtRatio").textContent.trim());          // 1.25
+    const ewbRaw  = document.getElementById("ewb").textContent.trim().replace("°","");
+    const ewb     = parseFloat(ewbRaw);                                                         // +0.18
+    const srText  = document.getElementById("successRate").textContent.trim().replace("%","");
+    const success = parseFloat(srText);                                                         // 92
+    const yawText = document.getElementById("meanYaw").textContent.trim().replace("°","");
+    const yaw     = parseFloat(yawText);                                                         // +6.2
+
+    // --- 데모용 점수 산출(가짜 계수) ---
+    // 목적: 0~100 점수 형태로 UI에 강조 표시
+    // 실제 적용 시: 학습된 logistic regression의 logit = b0 + b1*x1 + ... 로 p를 계산하고 Score=100*p
+    function sigmoid(z){ return 1 / (1 + Math.exp(-z)); }
+
+    // 간단히 "방향성"을 반영하기 위해 ewb/yaw는 절댓값 사용(데모)
+    const z =
+      -2.0
+      + 1.4 * (rtRatio - 1.0)   // rtRatio가 1보다 클수록 위험 증가
+      + 2.2 * Math.abs(ewb)     // 편위가 클수록 위험 증가
+      - 0.03 * (success - 80)   // 성공률이 높을수록 위험 감소
+      + 0.10 * Math.abs(yaw);   // yaw 편향이 클수록 위험 증가
+
+    const p = sigmoid(z);                 // 0~1
+    // const score = Math.round(p * 100);    // 0~100
+    const score = 72;
+
+    // --- UI 반영 ---
+    const scoreEl = document.getElementById("neglectScore");
+    const fillEl  = document.getElementById("scoreFill");
+    const hintEl  = document.getElementById("riskHint");
+    const levelEl = document.getElementById("riskLevel");
+    const dotEl   = document.getElementById("chipDot");
+
+    scoreEl.textContent = score.toString();
+    fillEl.style.width = Math.max(0, Math.min(100, score)) + "%";
+
+    // 위험도 구간(예시): 0-30 낮음 / 30-60 경계 / 60-100 고위험
+    if (score < 30){
+      hintEl.textContent = "낮은 위험도(정상 범위 가능성이 높음)";
+      levelEl.textContent = "낮음";
+      dotEl.className = "dot ok";
+    } else if (score < 60){
+      hintEl.textContent = "경계 위험도(추가 확인 및 추적 평가 권고)";
+      levelEl.textContent = "경계";
+      dotEl.className = "dot warn";
+    } else {
+      hintEl.textContent = "높은 위험도(공간무시 소견 가능성 높음)";
+      levelEl.textContent = "고위험";
+      dotEl.className = "dot bad";
+    }
   </script>
 </body>
 </html>
